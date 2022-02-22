@@ -59,7 +59,7 @@ export default {
         },
       },
       isDisabledfoot: false,
-      version: "Versão estável 1.1.3 - 2022",
+      version: "estável 1.1.3 - 2022",
     };
   },
 };

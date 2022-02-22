@@ -12,10 +12,10 @@
             v-model="instrument"
             class="form-select justify-content-center"
           >
-            <option value="guitar">Violão</option>
-            <option value="cavaco">Cavaquinho</option>
-            <option disabled value="guitar2">Guitarra (em desenvolvimento)</option>
-            <option value="bass">Baixo</option>
+            <option value="guitar">Violão/Guitarra</option>
+            <option disabled value="cavaco">Cavaquinho (em breve!)</option>
+            <option disabled value="guitar2">Guitarra (em breve!)</option>
+            <option disabled value="bass">Baixo (em breve!)</option>
           </select>
         </div>
       </div>

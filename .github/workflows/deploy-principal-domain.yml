@@ -1,9 +1,9 @@
 on: 
   push:
     branches:
-      - v1.1.2-stable
+      - latest-stable-version
     tags:
-      - v1.1.2-stable
+      - latest-stable-version
 
 name: 🚀 Deploy website on push
 jobs:

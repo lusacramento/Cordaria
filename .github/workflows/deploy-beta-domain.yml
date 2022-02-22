@@ -5,7 +5,7 @@ on:
     tags:
       - beta-version
 
-name: 🚀 Deploy website on push
+name: 🚀 Deploy App on push in beta domain
 jobs:
   deploy:
     name: 🎉 Deploy

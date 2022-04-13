@@ -1,0 +1,14 @@
+{
+    "soundsCounter": {
+        "high": {
+            "baseUrl": "/audios/sounds-counter/",
+            "note": "C1",
+            "url": "metronome-high-bip"
+        },
+        "low": {
+            "baseUrl": "/audios/sounds-counter/",
+            "note": "C0",
+            "url": "metronome-low-bip"
+        }
+    }
+}

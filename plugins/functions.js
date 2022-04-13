@@ -50,21 +50,59 @@ export default {
     return instrumentMap
   },
 
+  //
+  getMetronomeUrls(soundsCounter, urls) {
+    urls[soundsCounter.high.note] = `${soundsCounter.high.url}.mp3`
+    urls[soundsCounter.low.note] = `${soundsCounter.low.url}.mp3`
+    return urls
+  },
+
+  getLooseStringsUrls(instrumentMap, urls) {
+    for (const i in instrumentMap) {
+      const iM = instrumentMap[i]
+      if (i > 0) {
+        urls[iM[0].note] = `${iM[0].tablature}.mp3`
+      }
+    }
+    return urls
+  },
+
+  getAllStringsUrls(instrumentMap, urls) {
+    for (const i in instrumentMap) {
+      const fret = instrumentMap[i]
+      if (i > 0) {
+        fret.forEach((element) => {
+          urls[element.note] = `${element.tablature}.mp3`
+        })
+      }
+    }
+    return urls
+  },
   // getting audios
 
-  getAudios(instrumentMap) {
+  getAudios(instrumentMap, settings, soundsCounter) {
     // starting Audio library
 
     if (Tone.context.state !== 'running') {
       Tone.context.resume()
     }
 
-    const urls = {}
-    for (const iString in instrumentMap) {
-      const fret = instrumentMap[iString]
-      fret.forEach((element) => {
-        urls[element.note] = `${element.tablature}.mp3`
-      })
+    let urls = {}
+
+    urls = this.getMetronomeUrls(soundsCounter, urls)
+
+    // get audios for arpeggio mode.
+    if (settings.stringNumber === 'arpeggio') {
+      urls = this.getLooseStringsUrls(instrumentMap, urls)
+      // get audios for normal mode.
+    } else {
+      urls = this.getAllStringsUrls(instrumentMap, urls)
+      // for (const iString in instrumentMap) {
+      //   const fret = instrumentMap[iString]
+      //   fret.forEach((element) => {
+      //     urls[element.note] = `${element.tablature}.mp3`
+      //   })
+      // }
     }
 
     const instrumentUrl = instrumentMap[0][0].baseUrl

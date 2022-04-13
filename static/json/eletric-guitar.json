@@ -4,15 +4,7 @@
             {
                 "name": "guitar",
                 "baseUrl": "/audios/eletric-guitar/",
-                "note": "C1",
-                "enharmony": "null",
-                "tablature": "metronome-high-bip",
                 "stringsNumber": 6
-            },
-            {
-                "note": "C0",
-                "enharmony": "null",
-                "tablature": "metronome-low-bip"
             }
         ],
         [

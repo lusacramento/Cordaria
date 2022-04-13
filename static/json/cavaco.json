@@ -4,15 +4,7 @@
             {
                 "name": "cavaco",
                 "baseUrl": "/audios/cavaco/",
-                "note": "C1",
-                "enharmony": "null",
-                "tablature": "metronome-high-bip",
                 "stringsNumber": 4
-            },
-            {
-                "note": "C0",
-                "enharmony": "null",
-                "tablature": "metronome-low-bip"
             }
         ],
         [

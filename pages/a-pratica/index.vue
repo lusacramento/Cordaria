@@ -103,6 +103,7 @@ export default {
     const cavaco = await $http.$get('./json/cavaco.json')
     const bass = await $http.$get('./json/bass.json')
     const settingsNav = await $http.$get('./json/instrument-settings.json')
+    const soundsCounter = await $http.$get('./json/sounds-counter.json')
 
     const tips = await $http.$get('./json/tips.json')
 
@@ -114,6 +115,9 @@ export default {
 
       // full deck
       deck: deck.deck,
+
+      // sounds-counter settings
+      soundsCounter: soundsCounter.soundsCounter,
 
       // instruments maps
       instruments: {
@@ -261,12 +265,15 @@ export default {
         this.instrument,
         this.instruments
       )
-
-      // getting audios
-      this.sampler = Func.getAudios(this.instrumentMap)
-
       // getting form data
       this.settings = Func.getData(payload, this.settings, this.lessons)
+
+      // getting audios
+      this.sampler = Func.getAudios(
+        this.instrumentMap,
+        this.settings,
+        this.soundsCounter
+      )
 
       this.startTraining()
     },

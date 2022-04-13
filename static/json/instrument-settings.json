@@ -71,6 +71,10 @@
                 {
                     "string": "fromTrebleToBass",
                     "label": "Todas (início corda 1)"
+                },
+                {
+                    "string": "arpeggio",
+                    "label": "Arpejo (início corda 4)"
                 }
             ]
         },

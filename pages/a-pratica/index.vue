@@ -97,7 +97,8 @@ export default {
   },
   async asyncData({ $http }) {
     const lessons = await $http.$get('./json/lessons.json')
-    const deck = await $http.$get('./json/deck.json')
+    const scalesDeck = await $http.$get('./json/scales-deck.json')
+    const arpeggiosDeck = await $http.$get('./json/arpeggios-deck.json')
     const acousticGuitar = await $http.$get('./json/acoustic-guitar.json')
     const eletricGuitar = await $http.$get('./json/eletric-guitar.json')
     const cavaco = await $http.$get('./json/cavaco.json')
@@ -113,8 +114,13 @@ export default {
 
       setNav: settingsNav.settings,
 
-      // full deck
-      deck: deck.deck,
+      //  decks
+      scalesDeck: scalesDeck.scalesDeck,
+      arpeggiosDeck: arpeggiosDeck.arpeggiosDeck,
+      deck: null,
+
+      // filtered deck
+      suffledDeck: null,
 
       // sounds-counter settings
       soundsCounter: soundsCounter.soundsCounter,
@@ -130,9 +136,6 @@ export default {
 
       // tips popup
       tips: tips.tips,
-
-      // filtered deck
-      suffledDeck: null,
 
       // exercises settings
       settings: {
@@ -280,6 +283,13 @@ export default {
 
     // Main Method
     startTraining() {
+      // selecting deck
+      if (this.settings.stringNumber === 'arpeggio') {
+        this.deck = this.arpeggiosDeck
+      } else {
+        this.deck = this.scalesDeck
+      }
+
       // suffling Deck
       this.suffledDeck = Func.generateExercise(
         this.deck,

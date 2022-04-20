@@ -22,6 +22,7 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
+    "caniuse-lite": "^1.0.30001332",
     "core-js": "^3.16.0",
     "npm": "^8.3.1",
     "nuxt": "^2.15.8",

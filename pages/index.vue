@@ -1,142 +1,467 @@
+/* eslint-disable no-console */
 <template>
-  <div id="the-project" class="the-project">
-    <div class="container-fluid">
+  <div id="the-pratice" class="cordaria">
+    <div class="exercise-nav container-fluid">
       <div class="row text-center layer-top align-items-center">
-        <div class="col">
+        <div class="col-12 col-lg-4">
+          <b-sidebar
+            id="sidebar-menu"
+            title="Menu"
+            class="menu-button"
+            shadow
+            bg-variant="dark"
+            text-variant=""
+            :visible="isEnabledMenu"
+          >
+            <div
+              class="exercises-nav-layer d-flex flex-column align-items-center"
+            >
+              <ExerciseNav
+                :lessons="lessons"
+                :set="setNav"
+                :is-visible-button-play="isVisibleButtonPlay"
+                :is-visible-button-stop="isVisibleStopButton"
+                :stop="stop"
+                :score="score"
+                @props="load"
+              />
+            </div>
+          </b-sidebar>
+          <b-button id="menu-button" v-b-toggle.sidebar-menu variant="dark"
+            >Menu</b-button
+          >
+        </div>
+        <div class="col-12 col-lg-4">
           <h1 class="title mt-3 mb-4">{{ title }}</h1>
         </div>
-      </div>
-    </div>
-    <div class="container layer-center">
-      <div class="row justify-content-around">
-        <div class="col-md-4 col-12">
-          <Box
-            :title-text="boxes.what.text"
-            :schema="boxes.what.schema"
-            :left-logo="boxes.what.leftLogo"
-            :right-logo="boxes.what.rightLogo"
-          />
-          <p class="large-line-height">
-            Destinado à pessoas interessadas em iniciar o estudo do violão e guitarra e
-            professores dessa arte, o projeto
-            <strong>Cordaria</strong>
-            é um aplicativo
-            <i>web</i>
-            com intuito de auxiliar a prática ao instrumento.
-          </p>
-          <p class="large-line-height">
-            Desenvolvido pelo músico e programador
-            <strong>Lu Sacramento</strong>, o projeto é fruto de uma pesquisa sobre novas
-            metodologias e abordagens ao ensino à distância de música.
-          </p>
-        </div>
-        <div class="col-md-4 col-12">
-          <Box
-            :title-text="boxes.doing.text"
-            :schema="boxes.doing.schema"
-            :left-logo="boxes.doing.leftLogo"
-            :right-logo="boxes.doing.rightLogo"
-          />
-          <p>
-            Sua função é gerar exercícios básicos de digitação com foco na técnica. Tais
-            exercícios vem para
-            <strong>auxiliar o educando</strong> a executar as notas dadas através de uma
-            escrita de tablatura, cuja a linguagem é de fácil entendimento comparado a
-            escrita de partitura.
-          </p>
-          <p>
-            Desta forma, o aluno poderá praticar junto ao auxílio de um
-            <strong>“correpetidor” virtual</strong>, em qualquer momento e lugar!
-          </p>
+        <div class="col-12 col-lg-4 d-flex justify-content-center">
+          <ScoreTerminal :score="score" />
+          <div v-if="isVisibleStopButton">
+            <button
+              type="button"
+              class="
+                btn btn-danger btn-controls
+                d-flex
+                align-items-center
+                justify-content-center
+              "
+              @click="stop(true)"
+            >
+              <font-awesome-icon class="fa fa-code stop" :icon="iconStop" />
+            </button>
+          </div>
         </div>
       </div>
-      <aside class="row d-flex justify-content-center mt-4">
-        <div class="col-lg-6 col-md-9 col-12">
-          <Box
-            :title-text="boxes.callInAction.text"
-            :schema="boxes.callInAction.schema"
-            :left-logo="boxes.callInAction.leftLogo"
-            :right-logo="boxes.callInAction.rightLogo"
+    </div>
+    <div class="row justify-content-center bg-exercise-screen">
+      <div class="col-lg-10 layer-center">
+        <div class="exercise-screen">
+          <ExerciseScreen
+            :card="card"
+            :suffled-deck="suffledDeck"
+            :is-mobile="settings.isMobile"
           />
         </div>
-      </aside>
+      </div>
     </div>
+    <div class="tips">
+      <CatJump :tips="tips" />
+    </div>
+    <div>infos:</div>
   </div>
 </template>
 
 <script>
-import Box from "@/components/box/Box.vue";
+// stop button
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faStop } from '@fortawesome/free-solid-svg-icons'
+
+// modules and functions
+import Func from '@/plugins/functions'
+import Animate from '@/plugins/animate'
+
+// components
+import CatJump from '@/components/cordaria/Tips'
+import ExerciseNav from '@/components/cordaria/ExerciseNav'
+import ExerciseScreen from '@/components/cordaria/ExerciseScreen'
+import ScoreTerminal from '@/components/cordaria/Score'
+
+library.add([faStop])
 
 export default {
-  components: { Box },
+  name: 'APratica',
+  components: {
+    FontAwesomeIcon,
+    CatJump,
+    ExerciseNav,
+    ExerciseScreen,
+    ScoreTerminal,
+  },
+  async asyncData({ $http }) {
+    const lessons = await $http.$get('./json/lessons.json')
+    const scalesDeck = await $http.$get('./json/scales-deck.json')
+    const arpeggiosDeck = await $http.$get('./json/arpeggios-deck.json')
+    const acousticGuitar = await $http.$get('./json/acoustic-guitar.json')
+    const eletricGuitar = await $http.$get('./json/eletric-guitar.json')
+    const cavaco = await $http.$get('./json/cavaco.json')
+    const bass = await $http.$get('./json/bass.json')
+    const settingsNav = await $http.$get('./json/instrument-settings.json')
+    const soundsCounter = await $http.$get('./json/sounds-counter.json')
 
+    const tips = await $http.$get('./json/tips.json')
+
+    return {
+      // predefined lessons
+      lessons: lessons.lessons,
+
+      setNav: settingsNav.settings,
+
+      //  decks
+      scalesDeck: scalesDeck.scalesDeck,
+      arpeggiosDeck: arpeggiosDeck.arpeggiosDeck,
+      deck: null,
+
+      // filtered deck
+      suffledDeck: null,
+
+      // sounds-counter settings
+      soundsCounter: soundsCounter.soundsCounter,
+
+      // instruments maps
+      instruments: {
+        acousticGuitar: acousticGuitar.guitarMap,
+        eletricGuitar: eletricGuitar.guitarMap,
+        cavaco: cavaco.cavacoMap,
+        bass: bass.bassMap,
+      },
+      instrumentMap: null,
+
+      // tips popup
+      tips: tips.tips,
+
+      // exercises settings
+      settings: {
+        isMobile: true,
+        lesson: 1,
+        firstFinger: 0,
+        stringNumber: '1',
+        bpm: 40,
+        allStrings: false,
+        direction: 'down',
+        release: 1,
+      },
+      instrument: null,
+
+      // Audios sequence
+      sequence: null,
+
+      // Cards and yours pointers
+      card: {
+        prev: {},
+        current: {},
+        next: {},
+      },
+
+      // Indexes
+      i: {
+        preCount: 4,
+        cardValue: 0,
+      },
+      lengthSuffledDeck: 0,
+      iCard: 0,
+      // iValue: 0,
+
+      swapCard: false,
+
+      // Show Buttons
+      isVisibleButtonPlay: false,
+      isVisibleStopButton: false,
+      iconStop: 'stop',
+
+      // Playing
+      tempo: null,
+
+      // score painel
+      score: 'Aguardando<br />para iniciar',
+
+      fadeOutValue: 10,
+
+      // Menu
+      isEnabledMenu: true,
+    }
+  },
   data() {
     return {
-      title: "O PROJETO",
-      boxes: {
-        what: {
-          text: "<h2>O que é?</h2>",
-          schema: "the-project",
-          leftLogo: false,
-          rightLogo: false,
-        },
-        doing: {
-          text: "<h2>O que faz?</h2>",
-          schema: "the-project",
-          leftLogo: false,
-          rightLogo: false,
-        },
-        callInAction: {
-          text:
-            '<main><a style="font-size:1.5em" class="no-text-decoration" href="/a-pratica">Inicie agora seu treinamento!</a></main>',
-          schema: "the-project",
-          leftLogo: true,
-          rightLogo: false,
-        },
-      },
-    };
+      title: 'A PRÁTICA',
+    }
   },
   head() {
     return {
-      title: "Cordaria - O Projeto",
+      title: 'Cordaria - Pratique agora!',
       meta: [
         {
-          hid: "titleprojeto",
-          name: "title",
-          content: "Cordaria - Já praticou hoje?",
+          hid: 'titlepratica',
+          name: 'title',
+          content: 'Já Praticou Hoje? Inicie agora mesmo seu treinamento!',
         },
         {
-          hid: "projeto",
-          name: "description",
-          content:
-            "O projeto Cordaria é resultado de uma pesquisa que vem para auxiliar, educandos e professores, a prática de violão e guitarra",
+          hid: 'pratica',
+          name: 'description',
+          content: 'Inicie agora mesmo seu treinamento musical. Bons Estudos!',
         },
         {
-          hid: "projetokeys",
-          name: "keywords",
-          content: "pesquisa, prática, música, projeto, violão, guitarra, método",
+          hid: 'particakeys',
+          name: 'keywords',
+          content: 'Treinamento, Método, Violão, Guitarra, Dedilhado',
         },
       ],
       link: [
         {
-          rel: "canonical",
-          href: "https://cordaria.com.br",
+          rel: 'canonical',
+          href: 'https://cordaria.com.br/a-pratica',
         },
       ],
-    };
+    }
   },
-};
+
+  watch: {
+    i(newI) {
+      return newI
+    },
+
+    score(newScore) {
+      return newScore
+    },
+
+    suffledDeck(newSuffledDeck) {
+      return newSuffledDeck
+    },
+
+    card(newCard) {
+      return newCard
+    },
+
+    tempo(newTempo) {
+      return newTempo
+    },
+  },
+
+  created() {
+    this.sendPropsHideFooter()
+  },
+
+  mounted() {
+    this.isVisibleButtonPlay = true
+  },
+  destroyed() {
+    this.stop(true)
+  },
+  methods: {
+    load(payload) {
+      // hide Menu
+      this.isEnabledMenu = payload.isEnabledMenu
+
+      this.isVisibleButtonPlay = false
+      this.score = 'Carregando<br>...'
+
+      // getting selected instrument
+      this.instrument = payload.instrument
+      this.instrumentMap = Func.selectInstrument(
+        this.instrument,
+        this.instruments
+      )
+      // getting form data
+      this.settings = Func.getData(payload, this.settings, this.lessons)
+
+      // getting audios
+      this.sampler = Func.getAudios(
+        this.instrumentMap,
+        this.settings,
+        this.soundsCounter
+      )
+
+      this.startTraining()
+    },
+
+    // Main Method
+    startTraining() {
+      // selecting and suffling deck
+      if (this.settings.stringNumber === 'arpeggio') {
+        this.deck = this.arpeggiosDeck
+        this.suffledDeck = Func.generateExercise(
+          this.deck,
+          this.settings.firstFinger,
+          false
+        )
+      } else {
+        this.deck = this.scalesDeck
+        this.suffledDeck = Func.generateExercise(
+          this.deck,
+          this.settings.firstFinger,
+          true
+        )
+      }
+
+      // generating audios sequence
+      this.tempo = Func.convertBpmToMs(this.settings.bpm)
+      this.settings.release = Func.calculateRelease(this.tempo)
+
+      console.log('sampler:', this.sampler)
+
+      this.sequence = Func.generateSequence(
+        this.settings,
+        this.suffledDeck,
+        this.instrumentMap,
+        this.sampler
+      )
+
+      // preparing lesson screen
+      this.card.current = this.suffledDeck[0]
+      this.card.next = this.suffledDeck[1]
+
+      this.lengthSuffledDeck = this.suffledDeck.length
+      this.i.preCount = this.card.current.fragments.length
+
+      // starting practice
+      this.timer = setInterval(this.practice, this.tempo)
+      this.isVisibleStopButton = false
+    },
+
+    practice() {
+      const lengthCardValue = this.card.current.value.length - 1
+
+      // starting audio sequence
+      this.sendSequence()
+      this.sequence.start()
+
+      // eneabling stop button
+      this.isVisibleStopButton = true
+
+      // starting preCount
+      if (this.i.preCount > 0) {
+        this.score = `Iniciando em <br /><b>${this.i.preCount}!</b>`
+
+        this.i.preCount = this.i.preCount - 1
+
+        // starting practice execution
+      } else if (this.iCard <= this.lengthSuffledDeck) {
+        this.score = `<b>Executando<br /></b>...`
+
+        if (this.swapCard) {
+          // animate cards
+          this.iCard = Animate.startAnimateCards(
+            this.iCard,
+            this.card,
+            this.suffledDeck,
+            this.lengthSuffledDeck
+          )
+
+          this.i.cardValue = 0
+        }
+
+        // animate values of cards
+
+        this.i.cardValue = Animate.startAnimateValues(
+          this.i.cardValue,
+          this.iCard,
+          this.lengthSuffledDeck,
+          this.card,
+          this.suffledDeck,
+          this.score,
+          this.finish
+        )
+
+        // testing when to switch cards
+        if (this.i.cardValue > lengthCardValue) {
+          this.swapCard = true
+        } else {
+          this.swapCard = false
+        }
+      }
+    },
+
+    sendSequence() {
+      this.$emit('sequence', this.sequence)
+    },
+
+    finish() {
+      clearInterval(this.timer)
+      this.score = 'Parabéns!<br />Treinamento concluído.'
+    },
+
+    stop(isResetRouter) {
+      if (this.sequence != null) {
+        clearInterval(this.timer)
+        this.sequence.stop()
+        this.isVisibleStopButton = false
+        this.score = 'Aguardando<br />...'
+        this.card.prev = {}
+        this.card.current = {}
+        this.card.next = {}
+        this.suffledDeck.length = 0
+        this.isVisibleButtonPlay = true
+      }
+      if (isResetRouter) {
+        this.$router.go()
+      }
+    },
+    sendPropsHideFooter() {
+      this.$emit('props', {
+        hideFooter: true,
+      })
+    },
+  },
+}
 </script>
 
-<style scoped>
-a {
-  font-size: 1.5em !important;
-}
-#the-project {
-  text-align: center;
+<style>
+b-button {
+  width: 45px;
+  height: 45px;
 }
 
-.large-line-height {
-  line-height: 1.7;
+.bg-exercise-screen {
+  background-color: var(--bg-nav);
+}
+
+#sidebar-menu {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  font-family: 'Encode Sans';
+  font-weight: var(--font-semi-bold);
+}
+
+#menu-button {
+  color: var(--font-color-p);
+}
+#menu-button:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.exercise-nav {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.exercise-screen {
+  justify-content: center;
+}
+
+.sidebar-menu-enabled {
+  display: flex !important;
+}
+
+.sidebarMenuDisabled {
+  display: none !important;
+}
+
+.b-sidebar-body {
+  display: flex !important;
+  align-items: center !important;
+}
+.close {
+  color: white;
+}
+.close:hover {
+  background-color: rgba(255, 255, 255, 0.8);
 }
 </style>

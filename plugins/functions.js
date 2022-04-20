@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Functions.js
 // This module contains the functions and methods used to run the application.
 
@@ -177,6 +178,26 @@ export default {
     return settings
   },
 
+  convertArpeggiosFragment(fragment) {
+    switch (fragment) {
+      case 'P':
+        fragment = 4
+        break
+      case 'I':
+        fragment = 3
+        break
+      case 'M':
+        fragment = 2
+        break
+      case 'A':
+        fragment = 1
+        break
+      default:
+        break
+    }
+    return fragment
+  },
+
   // generatting sequence
   generateSequence(settings, deck, instrumentMap, sampler) {
     const stringsNumber = instrumentMap[0][0].stringsNumber
@@ -195,7 +216,7 @@ export default {
       if (settings.allStrings) {
         card.fragments.forEach((fragments) => {
           const fragment = fragments.fragment
-          const note = this.getNotes(fragment, instrumentMap, settings)
+          const note = this.getNotes(fragment, instrumentMap, settings, false)
           notes.push(note)
         })
         // changing string
@@ -203,7 +224,8 @@ export default {
       } else {
         card.fragments.forEach((fragments) => {
           const fragment = fragments.fragment
-          notes.push(this.getNotes(fragment, instrumentMap, settings))
+          console.log('fragment', fragment)
+          notes.push(this.getNotes(fragment, instrumentMap, settings, true))
         })
       }
     })
@@ -221,13 +243,21 @@ export default {
     return seq
   },
 
-  getNotes(fragment, instrumentMap, settings) {
-    const fret = fragment
+  getNotes(fragment, instrumentMap, settings, isArpeggio) {
     let note = null
-    const strings = instrumentMap[settings.stringNumber]
-    const tablature = settings.stringNumber + fret
 
-    note = strings[fret][tablature]
+    if (isArpeggio) {
+      const stringNumber = this.convertArpeggiosFragment(fragment)
+      const fret = 0
+      note = `${stringNumber}${fret}`
+    } else {
+      const fret = fragment
+      const strings = instrumentMap[settings.stringNumber]
+      const tablature = settings.stringNumber + fret
+      note = strings[fret][tablature]
+    }
+    console.warn('note:', note)
+
     return note
   },
 
@@ -242,8 +272,10 @@ export default {
   },
 
   // generating visual cards
-  generateExercise(deck, firstFinger) {
+  generateExercise(deck, firstFinger, isToFilter) {
     let shadowDeck = deck.slice()
+    // eslint-disable-next-line no-console
+    console.log('shadowDeck:', shadowDeck)
     for (let i = shadowDeck.length; i > 0; i--) {
       const sortedIndex = this.sortIndex(i)
       const card = shadowDeck[sortedIndex]
@@ -251,8 +283,9 @@ export default {
       shadowDeck.splice(sortedIndex, 1)
     }
 
-    shadowDeck = shadowDeck.filter(this.filterFinger(firstFinger))
-
+    if (isToFilter) {
+      shadowDeck = shadowDeck.filter(this.filterFinger(firstFinger))
+    }
     return shadowDeck
   },
 }

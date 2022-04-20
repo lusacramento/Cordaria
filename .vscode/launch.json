@@ -1,36 +1,82 @@
 {
-    // Use o IntelliSense para saber mais sobre os atributos possíveis.
-    // Focalizar para exibir as descrições dos atributos existentes.
-    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "type": "chrome",
-        "request": "launch",
-        "name": "client: chrome",
-        "url": "http://localhost:3000",
-        "webRoot": "${workspaceFolder}"
-      },
-      {
-        "type": "node",
-        "request": "launch",
-        "name": "server: nuxt",
-        "args": ["dev"],
-        "osx": {
-          "program": "${workspaceFolder}/node_modules/.bin/nuxt"
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "client: chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/pages",
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/*.js", "!**/node_modules/**"],
+      "trace": true
+    },
+    {
+      "type": "firefox",
+      "request": "launch",
+      "reAttach": true,
+      "name": "client: firefox",
+      "webRoot": "${workspaceFolder}",
+      "url": "http://localhost:3000",
+      "pathMappings": [
+        {
+          "url": "webpack:///pages",
+          "path": "${workspaceFolder}/pages"
         },
-        "linux": {
-          "program": "${workspaceFolder}/node_modules/.bin/nuxt"
+        {
+          "url": "webpack:///pages",
+          "path": "${workspaceFolder}/pages"
         },
-        "windows": {
-          "program": "${workspaceFolder}/node_modules/nuxt/bin/nuxt.js"
+        {
+          "url": "webpack:///plugins",
+          "path": "${workspaceFolder}/plugins"
+        },
+        {
+          "url": "webpack:///plugins",
+          "path": "${workspaceFolder}/plugins"
+        },
+        {
+          "url": "webpack:///pages",
+          "path": "${workspaceFolder}/pages"
+        },
+        {
+          "url": "webpack:///pages",
+          "path": "${workspaceFolder}/pages"
         }
+      ]
+    },
+    {
+      "name": "WSL Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*",
+        "webpack:///src/*": "${webRoot}/*"
+      },
+      "trace": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "server: nuxt",
+      "args": ["dev"],
+      "osx": {
+        "program": "${workspaceFolder}/node_modules/.bin/nuxt"
+      },
+      "linux": {
+        "program": "${workspaceFolder}/node_modules/.bin/nuxt"
+      },
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/nuxt/bin/nuxt.js"
       }
-    ],
-    "compounds": [
-      {
-        "name": "fullstack: nuxt",
-        "configurations": ["server: nuxt", "client: chrome"]
-      }
-    ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "fullstack: nuxt",
+      "configurations": ["server: nuxt", "client: chrome"]
+    }
+  ]
 }

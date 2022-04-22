@@ -31,7 +31,7 @@
     "vue-slick-carousel": "^1.0.6"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.17.7",
+    "@babel/eslint-parser": "^7.17.0",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@nuxtjs/eslint-config": "^8.0.0",

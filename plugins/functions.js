@@ -221,6 +221,7 @@ export default {
   // generatting sequence
   generateSequence(settings, deck, instrumentMap, sampler) {
     const numberOfStrings = instrumentMap[0][0].numberOfStrings
+    const metronomeNotes = ['C1', 'C0', 'C0', 'C0', 'C0']
 
     let notes = null
     let exerciseNotes = null
@@ -247,7 +248,7 @@ export default {
           settings,
           numberOfStrings
         )
-
+        metronomeNotes.pop()
         break
       case 'normal':
         exerciseNotes = this.prepareToGetNotes(
@@ -259,7 +260,6 @@ export default {
     }
 
     // concatenating metronome and exercises notes
-    const metronomeNotes = ['C1', 'C0', 'C0', 'C0', 'C0']
     notes = this.concatenateNotes(metronomeNotes, exerciseNotes)
 
     const seq = new Tone.Sequence(
@@ -281,8 +281,7 @@ export default {
     if (settings.mode === 'arpeggio') {
       const stringNumber = this.convertArpeggiosFragment(fragment)
       const fret = 0
-      // const strings = instrumentMap[settings.stringNumber]
-      note = `${stringNumber}${fret}`
+      note = instrumentMap[stringNumber][fret].note
     } else {
       const fret = fragment
       const strings = instrumentMap[settings.stringNumber]

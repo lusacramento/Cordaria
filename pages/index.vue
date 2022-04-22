@@ -288,7 +288,7 @@ export default {
     // Main Method
     startTraining() {
       // selecting and suffling deck
-      if (this.settings.stringNumber === 'arpeggio') {
+      if (this.settings.mode === 'arpeggio') {
         this.deck = this.arpeggiosDeck
         this.suffledDeck = Func.generateExercise(
           this.deck,

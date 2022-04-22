@@ -3,7 +3,7 @@
         {
             "id": 0,
             "value": "PIMA",
-            "width": 5,
+            "width": 4,
             "isFutureCard": true,
             "isCurrentCard": false,
             "isPastCard": false,

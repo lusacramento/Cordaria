@@ -63,18 +63,6 @@
                 {
                     "string": 4,
                     "label": "Corda 4 (Ré4)"
-                },
-                {
-                    "string": "fromBassToTreble",
-                    "label": "Todas (início corda 4)"
-                },
-                {
-                    "string": "fromTrebleToBass",
-                    "label": "Todas (início corda 1)"
-                },
-                {
-                    "string": "arpeggio",
-                    "label": "Arpejo (início corda 4)"
                 }
             ]
         },
@@ -123,6 +111,24 @@
             },
             {
                 "firstFinger": 4
+            }
+        ],
+        "modes": [
+            {
+                "mode": "normal",
+                "label": "Corda única"
+            },
+            {
+                "mode": "fromBassToTreble",
+                "label": "Todas cordas ascendentes"
+            },
+            {
+                "mode": "fromTrebleToBass",
+                "label": "Todas cordas descendentes"
+            },
+            {
+                "mode": "Arpeggio",
+                "label": "Arpejo corda solta"
             }
         ]
     }

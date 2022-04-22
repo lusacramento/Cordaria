@@ -28,7 +28,6 @@ export default {
 
   // end Math functions
 
-  // Exercises Functions
   // selecting instrument
   selectInstrument(instrument, instruments) {
     let instrumentMap = {}
@@ -60,9 +59,9 @@ export default {
 
   getLooseStringsUrls(instrumentMap, urls) {
     for (const i in instrumentMap) {
-      const iM = instrumentMap[i]
+      const fret = instrumentMap[i]
       if (i > 0) {
-        urls[iM[0].note] = `${iM[0].tablature}.mp3`
+        urls[fret[0].note] = `${fret[0].tablature}.mp3`
       }
     }
     return urls
@@ -89,21 +88,15 @@ export default {
     }
 
     let urls = {}
-
+    // get audios for the metronome
     urls = this.getMetronomeUrls(soundsCounter, urls)
 
-    // get audios for arpeggio mode.
+    // get audios for the arpeggio mode.
     if (settings.stringNumber === 'arpeggio') {
       urls = this.getLooseStringsUrls(instrumentMap, urls)
       // get audios for normal mode.
     } else {
       urls = this.getAllStringsUrls(instrumentMap, urls)
-      // for (const iString in instrumentMap) {
-      //   const fret = instrumentMap[iString]
-      //   fret.forEach((element) => {
-      //     urls[element.note] = `${element.tablature}.mp3`
-      //   })
-      // }
     }
 
     const instrumentUrl = instrumentMap[0][0].baseUrl
@@ -132,6 +125,7 @@ export default {
       settings.stringNumber = lessons[lesson].stringNumber
       settings.bpm = lessons[lesson].bpm
     } else {
+      settings.mode = payload.mode
       settings.firstFinger = payload.firstFinger
       settings.stringNumber = payload.stringNumber
       settings.bpm = payload.bpm
@@ -140,10 +134,10 @@ export default {
   },
 
   // setting case if all strings is selected.
-  configAllStrings(settings, stringsNumber) {
+  configAllStrings(settings, numberOfStrings) {
     switch (settings.stringNumber) {
       case 'fromBassToTreble':
-        settings.stringNumber = stringsNumber
+        settings.stringNumber = numberOfStrings
         settings.direction = 'down'
         break
       case 'fromTrebleToBass':
@@ -198,37 +192,76 @@ export default {
     return fragment
   },
 
-  // generatting sequence
-  generateSequence(settings, deck, instrumentMap, sampler) {
-    const stringsNumber = instrumentMap[0][0].stringsNumber
+  concatenateNotes(metronomeNotes, exerciseNotes) {
+    const notes = []
+    metronomeNotes.forEach((element) => {
+      notes.push(element)
+    })
+    exerciseNotes.forEach((element) => {
+      notes.push(element)
+    })
+    return notes
+  },
 
-    // config if all strings enable
-    if (
-      settings.stringNumber === 'fromBassToTreble' ||
-      settings.stringNumber === 'fromTrebleToBass'
-    ) {
-      settings.allStrings = true
-      settings = this.configAllStrings(settings, stringsNumber)
-    }
-
-    const notes = ['C1', 'C0', 'C0', 'C0', 'C0']
+  // preparing and getting notes
+  prepareToGetNotes(deck, instrumentMap, settings, numberOfStrings) {
+    const notes = []
     deck.forEach((card) => {
-      if (settings.allStrings) {
-        card.fragments.forEach((fragments) => {
-          const fragment = fragments.fragment
-          const note = this.getNotes(fragment, instrumentMap, settings, false)
-          notes.push(note)
-        })
-        // changing string
-        settings = this.changingString(settings, stringsNumber)
-      } else {
-        card.fragments.forEach((fragments) => {
-          const fragment = fragments.fragment
-          console.log('fragment', fragment)
-          notes.push(this.getNotes(fragment, instrumentMap, settings, true))
-        })
+      card.fragments.forEach((fragments) => {
+        const fragment = fragments.fragment
+        notes.push(this.getNotes(fragment, instrumentMap, settings))
+      })
+      if (settings.isAllStrings) {
+        settings = this.changingString(settings, numberOfStrings)
       }
     })
+    return notes
+  },
+
+  // generatting sequence
+  generateSequence(settings, deck, instrumentMap, sampler) {
+    const numberOfStrings = instrumentMap[0][0].numberOfStrings
+
+    let notes = null
+    let exerciseNotes = null
+    // starting metronome sequence
+
+    // config if all strings enable
+    switch (settings.mode) {
+      case 'fromBassToTreble':
+      case 'fromTrebleToBass':
+        settings.allStrings = true
+        settings = this.configAllStrings(settings, numberOfStrings)
+        exerciseNotes = this.prepareToGetNotes(
+          deck,
+          instrumentMap,
+          settings,
+          numberOfStrings
+        )
+        // changing string
+        settings = this.changingString(settings, numberOfStrings)
+        break
+      case 'arpeggio':
+        exerciseNotes = this.prepareToGetNotes(
+          deck,
+          instrumentMap,
+          settings,
+          numberOfStrings
+        )
+
+        break
+      case 'normal':
+        exerciseNotes = this.prepareToGetNotes(
+          deck,
+          instrumentMap,
+          settings,
+          numberOfStrings
+        )
+    }
+
+    // concatenating metronome and exercises notes
+    const metronomeNotes = ['C1', 'C0', 'C0', 'C0', 'C0']
+    notes = this.concatenateNotes(metronomeNotes, exerciseNotes)
 
     const seq = new Tone.Sequence(
       (time, note) => {
@@ -243,12 +276,16 @@ export default {
     return seq
   },
 
-  getNotes(fragment, instrumentMap, settings, isArpeggio) {
+  getNotes(fragment, instrumentMap, settings) {
     let note = null
 
-    if (isArpeggio) {
+    if (
+      settings.mode === 'fromBassToTreble' ||
+      settings.mode === 'fromTrebleToBass'
+    ) {
       const stringNumber = this.convertArpeggiosFragment(fragment)
       const fret = 0
+      // const strings = instrumentMap[settings.stringNumber]
       note = `${stringNumber}${fret}`
     } else {
       const fret = fragment
@@ -269,6 +306,16 @@ export default {
       const filter = firstFinger.toString()
       return value === filter
     }
+  },
+
+  filterLooseStrings(instrumentMap) {
+    const shadowInstumentMap = []
+    instrumentMap[0].forEach((element, i) => {
+      if (i > 0) {
+        shadowInstumentMap.push = element[0]
+      }
+    })
+    return shadowInstumentMap
   },
 
   // generating visual cards

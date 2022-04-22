@@ -50,6 +50,21 @@
       </select>
     </div>
 
+    <div class="form-group col-6 col-lg-12 select-mode">
+      <label for="select-mode" class="form-label">Modo</label>
+      <br />
+      <select
+        id="select-mode"
+        v-model="mode"
+        class="controls disabled"
+        :disabled="isReadtoLoad"
+      >
+        <option v-for="md in set.modes" :key="md.mode" :value="md.mode">
+          {{ md.label }}
+        </option>
+      </select>
+    </div>
+
     <div class="form-group col-6 col-lg-12 select-first-finger">
       <label for="select-first-finger" class="form-label">Primeiro Dedo</label>
       <br />
@@ -204,6 +219,7 @@ export default {
       view: 'mobile',
       iconPlay: 'play',
       lesson: 1,
+      mode: 'normal',
       firstFinger: 0,
       stringNumber: 1,
       bpm: 40,
@@ -248,6 +264,7 @@ export default {
     sendProps() {
       this.$emit('props', {
         lesson: this.lesson,
+        mode: this.mode,
         firstFinger: this.firstFinger,
         stringNumber: this.stringNumber,
         bpm: this.bpm,

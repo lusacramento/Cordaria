@@ -144,6 +144,7 @@ export default {
       settings: {
         isMobile: true,
         lesson: 1,
+        mode: 'normal',
         firstFinger: 0,
         stringNumber: '1',
         bpm: 40,

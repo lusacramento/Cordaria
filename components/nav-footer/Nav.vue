@@ -36,30 +36,32 @@
         <div class="container-fluid justify-content-end">
           <ul class="navbar-nav" :class="{ collapseColor: !isCollapse }">
             <li class="nav-item">
-              <nuxt-link
-                to="https://cordaria.com.br/o-tutorial"
+              <a
+                href="https://cordaria.com.br/o-tutorial"
+                target="_blank"
                 class="nav-link the-tutorial-link"
                 :class="{ theTutorialLinkActive: isActiveTheTutorial }"
-                ><span>Tutorial</span></nuxt-link
+                ><span>Tutorial</span></a
               >
             </li>
             <li class="nav-item">
-              <nuxt-link
-                to="https://cordaria.com.br/dicas"
+              <a
+                href="https://cordaria.com.br/dicas"
+                target="_blank"
                 class="nav-link clues-link"
                 :class="{ cluesLinkActive: isActiveClues }"
-                ><span>Dicas</span></nuxt-link
+                ><span>Dicas</span></a
               >
             </li>
             <li class="nav-item">
-              <nuxt-link
-                to="https://cordaria.com.br"
+              <a
+                href="https://cordaria.com.br"
                 class="nav-link the-project-link"
                 :class="{
                   theProjectLinkActive: isActiveTheProject,
                 }"
                 aria-current="page"
-                ><span>Sobre</span></nuxt-link
+                ><span>Sobre</span></a
               >
             </li>
             <li class="nav-item">

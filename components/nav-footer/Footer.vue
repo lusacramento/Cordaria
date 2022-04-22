@@ -1,16 +1,20 @@
 <template>
-  <div>
+  <div id="footer-credits">
     <footer class="footer container-fluid d-flex">
       <div class="row align-items-center d-flex justify-content-center">
         <div class="col-sm-3 credits">
           <div id="credits" class="">
             <p class="d-block">
               Developer:
-              <a :href="team.author.link" rel="nofollow" target="_blank">{{ team.author.name }}</a>
+              <a :href="team.author.link" rel="nofollow" target="_blank">{{
+                team.author.name
+              }}</a>
 
               <br />
               Designer: &nbsp;
-              <a :href="team.design.link" rel="nofollow" target="_blank">{{ team.design.name }}</a>
+              <a :href="team.design.link" rel="nofollow" target="_blank">{{
+                team.design.name
+              }}</a>
             </p>
           </div>
         </div>
@@ -39,30 +43,31 @@
 </template>
 
 <script>
-import publicLogos from "@/assets/imgs/public-agencies-horizontal-logo.png";
+import publicLogos from '@/assets/imgs/public-agencies-horizontal-logo.png'
 export default {
+  name: 'FooterCredits',
   data() {
     return {
       logoAldirBlanc: {
         link: publicLogos,
-        altText: "logos orgãos culturais públicos",
+        altText: 'logos orgãos culturais públicos',
       },
 
       team: {
         author: {
-          name: "Lu Sacramento",
-          link: "https://lusacramento.com.br",
+          name: 'Lu Sacramento',
+          link: 'https://lusacramento.com.br',
         },
         design: {
-          name: "Gabriel Barreto",
-          link: "https://mixeldesign.com.br/",
+          name: 'Gabriel Barreto',
+          link: 'https://mixeldesign.com.br/',
         },
       },
       isDisabledfoot: false,
-      version: "beta 2.0.0 - 2022",
-    };
+      version: 'beta 2.1.0 - 2022',
+    }
   },
-};
+}
 </script>
 
 <style>
@@ -72,7 +77,7 @@ export default {
 
 .credits,
 .copyright {
-  font-family: "Encode Sans";
+  font-family: 'Encode Sans';
   font-weight: var(--font-light);
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <nav class="nav navbar navbar-expand-lg align-content-center">
+  <nav id="nav-bar" class="nav navbar navbar-expand-lg align-content-center">
     <div class="container-fluid">
       <nuxt-link
         id="link-principal"
@@ -37,47 +37,29 @@
           <ul class="navbar-nav" :class="{ collapseColor: !isCollapse }">
             <li class="nav-item">
               <nuxt-link
-                to="/"
+                to="https://cordaria.com.br/o-tutorial"
+                class="nav-link the-tutorial-link"
+                :class="{ theTutorialLinkActive: isActiveTheTutorial }"
+                ><span>Tutorial</span></nuxt-link
+              >
+            </li>
+            <li class="nav-item">
+              <nuxt-link
+                to="https://cordaria.com.br/dicas"
+                class="nav-link clues-link"
+                :class="{ cluesLinkActive: isActiveClues }"
+                ><span>Dicas</span></nuxt-link
+              >
+            </li>
+            <li class="nav-item">
+              <nuxt-link
+                to="https://cordaria.com.br"
                 class="nav-link the-project-link"
                 :class="{
                   theProjectLinkActive: isActiveTheProject,
                 }"
                 aria-current="page"
-                ><span>O Projeto</span></nuxt-link
-              >
-            </li>
-            <li class="nav-item">
-              <nuxt-link
-                to="/a-pesquisa"
-                class="nav-link the-research-link"
-                :class="{ theResearchLinkActive: isActiveTheResearch }"
-                aria-current="page"
-              >
-                <span>A Pesquisa</span></nuxt-link
-              >
-            </li>
-            <li class="nav-item">
-              <nuxt-link
-                to="/a-pratica"
-                class="nav-link the-pratice-link"
-                :class="{ thePraticeLinkActive: isActiveThePratice }"
-                ><span>A Prática</span></nuxt-link
-              >
-            </li>
-            <li class="nav-item">
-              <nuxt-link
-                to="/o-tutorial"
-                class="nav-link the-tutorial-link"
-                :class="{ theTutorialLinkActive: isActiveTheTutorial }"
-                ><span>O Tutorial</span></nuxt-link
-              >
-            </li>
-            <li class="nav-item">
-              <nuxt-link
-                to="/dicas"
-                class="nav-link clues-link"
-                :class="{ cluesLinkActive: isActiveClues }"
-                ><span>Dicas</span></nuxt-link
+                ><span>Sobre</span></nuxt-link
               >
             </li>
             <li class="nav-item">
@@ -114,21 +96,22 @@
 </template>
 
 <script>
-import cordariaIconDisabled from "@/assets/imgs/logo-cordaria-disabled.png";
-import cordariaIconEnabled from "@/assets/imgs/logo-cordaria-enabled.png";
+import cordariaIconDisabled from '@/assets/imgs/logo-cordaria-disabled.png'
+import cordariaIconEnabled from '@/assets/imgs/logo-cordaria-enabled.png'
 
-import emailIconDisabled from "@/assets/imgs/email-icon-disabled.png";
-import emailIconEnabled from "@/assets/imgs/email-icon-enabled.png";
+import emailIconDisabled from '@/assets/imgs/email-icon-disabled.png'
+import emailIconEnabled from '@/assets/imgs/email-icon-enabled.png'
 
-import instaIconDisabled from "@/assets/imgs/logo-insta-disabled.png";
-import instaIconEnabled from "@/assets/imgs/logo-insta-enabled.png";
+import instaIconDisabled from '@/assets/imgs/logo-insta-disabled.png'
+import instaIconEnabled from '@/assets/imgs/logo-insta-enabled.png'
 export default {
+  name: 'NavBar',
   // eslint-disable-next-line require-await
   props: {
     baseUrl: {
       type: String,
       default() {
-        return "";
+        return ''
       },
     },
   },
@@ -137,22 +120,22 @@ export default {
       icons: {
         cordaria: {
           url: cordariaIconDisabled,
-          altText: "Logotipo do Cordaria",
+          altText: 'Logotipo do Cordaria',
           enabled: cordariaIconEnabled,
           disabled: cordariaIconDisabled,
         },
 
         email: {
-          href: "mailto:japraticouhoje@cordaria.com.br",
+          href: 'mailto:japraticouhoje@cordaria.com.br',
           url: emailIconDisabled,
-          altText: "Ícone contato",
+          altText: 'Ícone contato',
           enabled: emailIconEnabled,
           disabled: emailIconDisabled,
         },
 
         insta: {
           url: instaIconDisabled,
-          altText: "Ícone Instagram",
+          altText: 'Ícone Instagram',
           enabled: instaIconEnabled,
           disabled: instaIconDisabled,
         },
@@ -167,68 +150,68 @@ export default {
       isOverIcontEmail: false,
       isOverIconInstagram: false,
       isCollapse: true,
-    };
+    }
   },
   watch: {
     $route() {
-      this.iniciateActive();
+      this.iniciateActive()
     },
   },
   // eslint-disable-next-line require-await
   async mounted() {
-    this.currentUrl = await this.getUrl();
-    this.iniciateActive();
+    this.currentUrl = await this.getUrl()
+    this.iniciateActive()
   },
 
   methods: {
     getUrl: function async() {
-      return window.location.href;
+      return window.location.href
     },
     imageMouseOver(img) {
-      return img.enabled;
+      return img.enabled
     },
     imageMouseLeave(img) {
-      return img.disabled;
+      return img.disabled
     },
 
     showMenu() {
-      this.isCollapse = !this.isCollapse;
+      this.isCollapse = !this.isCollapse
     },
 
     removeAllActive() {
-      this.isActiveTheProject = false;
-      this.isActiveTheResearch = false;
-      this.isActiveThePratice = false;
-      this.isActiveTheTutorial = false;
-      this.isActiveClues = false;
-      this.isOverIconMenu = false;
+      this.isActiveTheProject = false
+      this.isActiveTheResearch = false
+      this.isActiveThePratice = false
+      this.isActiveTheTutorial = false
+      this.isActiveClues = false
+      this.isOverIconMenu = false
     },
 
     iniciateActive() {
-      this.removeAllActive();
+      this.removeAllActive()
       // console.log("base url:", this.baseUrl);
       switch (window.location.href) {
         case `${this.baseUrl}`:
-          this.isActiveTheProject = true;
-          break;
+          this.isActiveTheProject = true
+          break
         case `${this.baseUrl}a-pesquisa`:
-          this.isActiveTheResearch = true;
-          break;
+          this.isActiveTheResearch = true
+          break
         case `${this.baseUrl}a-pratica`:
-          this.isActiveThePratice = true;
-          break;
+          this.isActiveThePratice = true
+          break
         case `${this.baseUrl}o-tutorial`:
-          this.isActiveTheTutorial = true;
-          break;
+          this.isActiveTheTutorial = true
+          break
         case `${this.baseUrl}dicas`:
-          this.isActiveClues = true;
-          break;
+          this.isActiveClues = true
+          break
         default:
-          break;
+          break
       }
     },
   },
-};
+}
 </script>
 
 <style>

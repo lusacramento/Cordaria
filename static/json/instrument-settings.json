@@ -127,7 +127,7 @@
                 "label": "Todas cordas descendentes"
             },
             {
-                "mode": "Arpeggio",
+                "mode": "arpeggio",
                 "label": "Arpejo corda solta"
             }
         ]

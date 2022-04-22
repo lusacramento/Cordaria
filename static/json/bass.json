@@ -4,7 +4,7 @@
             {
                 "name": "bass",
                 "baseUrl": "/audios/bass/",
-                "stringsNumber": 4
+                "numberOfStrings": 4
             }
         ],
         [

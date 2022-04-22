@@ -135,7 +135,7 @@ export default {
 
   // setting case if all strings is selected.
   configAllStrings(settings, numberOfStrings) {
-    switch (settings.stringNumber) {
+    switch (settings.mode) {
       case 'fromBassToTreble':
         settings.stringNumber = numberOfStrings
         settings.direction = 'down'
@@ -149,7 +149,7 @@ export default {
     return settings
   },
   // changing string
-  changingString(settings, stringsNumber) {
+  changingString(settings, numberOfStrings) {
     if (settings.direction === 'down') {
       settings.stringNumber--
     } else {
@@ -157,14 +157,14 @@ export default {
     }
 
     if (
-      (settings.stringNumber === 1 && stringsNumber === 4) ||
-      (settings.stringNumber === 1 && stringsNumber === 6)
+      (settings.stringNumber === 1 && numberOfStrings === 4) ||
+      (settings.stringNumber === 1 && numberOfStrings === 6)
     ) {
       settings.direction = 'up'
     }
     if (
-      (settings.stringNumber === 4 && stringsNumber === 4) ||
-      (settings.stringNumber === 6 && stringsNumber === 6)
+      (settings.stringNumber === 4 && numberOfStrings === 4) ||
+      (settings.stringNumber === 6 && numberOfStrings === 6)
     ) {
       settings.direction = 'down'
     }
@@ -211,7 +211,7 @@ export default {
         const fragment = fragments.fragment
         notes.push(this.getNotes(fragment, instrumentMap, settings))
       })
-      if (settings.isAllStrings) {
+      if (settings.allStrings) {
         settings = this.changingString(settings, numberOfStrings)
       }
     })
@@ -238,8 +238,7 @@ export default {
           settings,
           numberOfStrings
         )
-        // changing string
-        settings = this.changingString(settings, numberOfStrings)
+
         break
       case 'arpeggio':
         exerciseNotes = this.prepareToGetNotes(
@@ -279,10 +278,7 @@ export default {
   getNotes(fragment, instrumentMap, settings) {
     let note = null
 
-    if (
-      settings.mode === 'fromBassToTreble' ||
-      settings.mode === 'fromTrebleToBass'
-    ) {
+    if (settings.mode === 'arpeggio') {
       const stringNumber = this.convertArpeggiosFragment(fragment)
       const fret = 0
       // const strings = instrumentMap[settings.stringNumber]

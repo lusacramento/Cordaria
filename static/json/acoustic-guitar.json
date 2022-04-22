@@ -4,7 +4,7 @@
             {
                 "name": "guitar",
                 "baseUrl": "/audios/acoustic-guitar/",
-                "stringsNumber": 6
+                "numberOfStrings": 6
             }
         ],
         [
